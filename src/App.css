@@ -1,0 +1,93 @@
+@import "tailwindcss";
+
+/* Theme Variables */
+[data-theme="light"] {
+  --color-primary: #000000;
+  --color-secondary: #00000057;
+  --color-accent: #ffffff;
+  --color-background: #00000058;
+  --color-surface: #f8fafc;
+  --color-text: #000000;
+  --color-text-secondary: #ffffff;
+  --color-border: #e2e8f0;
+  --color-light: #ffffff84;
+  --color-constant: #000000;
+  --color-constant-secondary: #ffffff;
+}
+
+[data-theme="dark"] {
+  --color-primary: #ffffff;
+  --color-secondary: #ffffff62;
+  --color-accent: #000000;
+  --color-background: #ffffff58;
+  --color-surface: #000000;
+  --color-text: #ffffff;
+  --color-text-secondary: #000000;
+  --color-border: #ffffff95;
+  --color-light: #ffffff84;
+  --color-constant: #000000;
+  --color-constant-secondary: #ffffff;
+}
+
+[data-theme="blue"] {
+  --color-primary: #3b82f6;
+  --color-secondary: #1d4ed8;
+  --color-accent: #60a5fa;
+  --color-background: #dbeafe;
+  --color-surface: #eff6ff;
+  --color-text: #1e40af;
+  --color-text-secondary: #161256;
+  --color-border: #93c5fd;
+  --color-light: #60a5fa;
+  --color-constant: #60a5fa;
+  --color-constant-secondary: #1e40af;
+}
+
+[data-theme="green"] {
+  --color-primary: #22c55e;
+  --color-secondary: #15803d;
+  --color-accent: #4ade80;
+  --color-background: #dcfce7;
+  --color-surface: #f0fdf4;
+  --color-text: #14532d;
+  --color-text-secondary: #0c391d;
+  --color-border: #86efac;
+  --color-light: #4ade80;
+  --color-constant: #4ade80;
+  --color-constant-secondary: #14532d;
+}
+
+[data-theme="purple"] {
+  --color-primary: #a855f7;
+  --color-secondary: #7c3aed;
+  --color-accent: #c084fc;
+  --color-background: #f3e8ff;
+  --color-surface: #faf5ff;
+  --color-text: #581c87;
+  --color-text-secondary: #2f0f49;
+  --color-border: #d8b4fe;
+  --color-light: #c084fc;
+  --color-constant: #c084fc;
+  --color-constant-secondary: #581c87;
+}
+
+[data-theme="rose"] {
+  --color-primary: #f43f5e;
+  --color-secondary: #e11d48;
+  --color-accent: #fb7185;
+  --color-background: #ffe4e6;
+  --color-surface: #fff1f2;
+  --color-text: #881337;
+  --color-text-secondary: #3f0c1a;
+  --color-border: #fda4af;
+  --color-light: #fb7185;
+  --color-constant: #fb7185;
+  --color-constant-secondary: #881337;
+}
+
+/* Apply theme colors to body */
+body {
+  background-color: var(--color-background);
+  color: var(--color-text);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
