@@ -87,7 +87,7 @@ app.post("/api/analyze-report", upload.single("file"), (req, res) => {
   if (uploadedFile) {
     // File content is in uploadedFile.buffer
     res.json({
-      summary: `Analyzed "${uploadedFile.originalname}" in-memory. No disk usage.`,
+      summary: `Analyzed "${uploadedFile.originalname}" .`,
       recommendations: [
         "Memory-based processing complete",
         "No file saved on disk",

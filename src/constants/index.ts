@@ -23,4 +23,6 @@ export const THEMES = [
     name: "rose",
     colors: ["#ffe4e6", "#f43f5e", "#e11d48", "#ffffff"],
   },
-];
+] as const;
+
+export type Theme = (typeof THEMES)[number]["name"];

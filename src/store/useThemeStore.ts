@@ -1,13 +1,19 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import type { Theme } from "../constants"; // auto-inferred from THEMES
 
-export const useThemeStore = create(
+interface ThemeStore {
+  theme: Theme;
+  setTheme: (theme: Theme) => void;
+  initializeTheme: () => void;
+}
+
+export const useThemeStore = create<ThemeStore>()(
   persist(
-    (set, get) => ({
-      theme: "light",
-      setTheme: (theme: "light" | "dark") => {
+    (set, get): ThemeStore => ({
+      theme: "light", // default
+      setTheme: (theme) => {
         set({ theme });
-        // Apply theme to document
         document.documentElement.setAttribute("data-theme", theme);
       },
       initializeTheme: () => {
@@ -16,7 +22,7 @@ export const useThemeStore = create(
       },
     }),
     {
-      name: "theme-storage",
+      name: "theme-storage", // key in localStorage
     }
   )
 );
