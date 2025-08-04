@@ -1,0 +1,3 @@
+Merge Login/Register
+
+Fix Header & Footer Responsiveness
