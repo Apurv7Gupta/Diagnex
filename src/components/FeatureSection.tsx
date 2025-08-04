@@ -19,16 +19,19 @@ const FeatureSection = () => {
     if (!symptomInput.trim()) return;
 
     try {
-      const response = await fetch("http://localhost:3001/api/symptoms", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          symptoms: symptomInput
-            .split(",")
-            .map((s) => s.trim())
-            .filter(Boolean),
-        }),
-      });
+      const response = await fetch(
+        "https://diagnex.onrender.com/api/symptoms",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            symptoms: symptomInput
+              .split(",")
+              .map((s) => s.trim())
+              .filter(Boolean),
+          }),
+        }
+      );
 
       if (!response.ok) throw new Error(`API error: ${response.status}`);
       const data = await response.json();
@@ -63,11 +66,14 @@ const FeatureSection = () => {
     if (!reportInput.trim()) return;
 
     try {
-      const response = await fetch("http://localhost:3001/api/analyze-report", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ reportContent: reportInput }),
-      });
+      const response = await fetch(
+        "https://diagnex.onrender.com/api/analyze-report",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ reportContent: reportInput }),
+        }
+      );
 
       if (!response.ok) throw new Error(`API error: ${response.status}`);
       const data = await response.json();
@@ -104,10 +110,13 @@ const FeatureSection = () => {
       const formData = new FormData();
       formData.append("file", uploadedFile);
 
-      const response = await fetch("http://localhost:3001/api/analyze-report", {
-        method: "POST",
-        body: formData,
-      });
+      const response = await fetch(
+        "https://diagnex.onrender.com/api/analyze-report",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
       if (!response.ok) throw new Error(`API error: ${response.status}`);
       const data = await response.json();

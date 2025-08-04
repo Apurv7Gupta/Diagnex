@@ -59,7 +59,7 @@ app.post("/api/symptoms", async (req, res) => {
   const { symptoms } = req.body;
 
   try {
-    const response = await fetch("http://localhost:5000/predict", {
+    const response = await fetch("http://diagnex.vercel.app/predict", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ symptoms }),
