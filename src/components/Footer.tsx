@@ -7,8 +7,8 @@ const Footer = () => {
       className="text-white py-8 sm:py-12 transition-colors duration-300"
       style={{ background: "var(--color-constant)" }}
     >
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8 mb-6 sm:mb-8">
+      <div className="container mx-auto px-4 sm:px-10 sm:pl-6 sm:py-3 lg:px-8">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 gap-6 sm:gap-8 mb-6 sm:mb-8 sm:pl-4">
           <div>
             <h3
               className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 transition-colors duration-300"
@@ -22,7 +22,7 @@ const Footer = () => {
             >
               <li>Apurv Gupta</li>
               <li>Khushraj Rai</li>
-              <li>Rudra Pattnik</li>
+              <li>Rudra Pattnaik</li>
               <li>Rohit Jadhav</li>
               <li>Khushi Raisinghani</li>
             </ul>
@@ -53,9 +53,9 @@ const Footer = () => {
             </ul>
           </div>
 
-          <div>
+          <div className=" ">
             <h3
-              className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 transition-colors duration-300"
+              className="text-base sm:text-md font-semibold mb-3 sm:mb-4 transition-colors duration-300"
               style={{ color: "var(--color-constant-secondary)" }}
             >
               Contact Us

@@ -15,6 +15,16 @@ function App() {
 
   const [about, setabout] = useState<string | null>(null);
 
+  // Scroll after AboutUs has been mounted
+  useEffect(() => {
+    if (about === "aboutus") {
+      const el = document.getElementById("about");
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  }, [about]);
+
   return (
     <>
       <div
