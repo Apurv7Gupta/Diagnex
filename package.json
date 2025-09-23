@@ -9,7 +9,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "all": "concurrently \"node server/index.js\" \"npm run dev\" \"python Model/app.py\""
+    "all": "concurrently \"node server/index.js\" \"npm run dev\" \"python Model/app.py\" \"python Model/summarizer_service.py\" "
   },
   "dependencies": {
     "@auth0/auth0-react": "^2.4.0",

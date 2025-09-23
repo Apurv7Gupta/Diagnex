@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Search, FileText, BarChart3, Upload, X, File } from "lucide-react";
+import { Search, FileText, Upload, X, File } from "lucide-react";
 
 const FeatureSection = () => {
   const [symptomInput, setSymptomInput] = useState("");
@@ -14,24 +14,25 @@ const FeatureSection = () => {
   const [reportInput, setReportInput] = useState("");
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [filePreview, setFilePreview] = useState<string | null>(null);
+  const [summaryText, setSummaryText] = useState<string | null>(null);
+  const [showSummarySection, setShowSummarySection] = useState(false);
+  const [summaryGenerated, setSummaryGenerated] = useState<string | null>(null);
+  const [geminiOutput, setGeminiOutput] = useState<string | null>(null);
 
   const handleSymptomSubmit = async () => {
     if (!symptomInput.trim()) return;
 
     try {
-      const response = await fetch(
-        "https://diagnex.onrender.com/api/symptoms",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            symptoms: symptomInput
-              .split(",")
-              .map((s) => s.trim())
-              .filter(Boolean),
-          }),
-        }
-      );
+      const response = await fetch("http://localhost:3001/api/symptoms", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          symptoms: symptomInput
+            .split(",")
+            .map((s) => s.trim())
+            .filter(Boolean),
+        }),
+      });
 
       if (!response.ok) throw new Error(`API error: ${response.status}`);
       const data = await response.json();
@@ -66,20 +67,22 @@ const FeatureSection = () => {
     if (!reportInput.trim()) return;
 
     try {
-      const response = await fetch(
-        "https://diagnex.onrender.com/api/analyze-report",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ reportContent: reportInput }),
-        }
-      );
+      const response = await fetch("http://localhost:3001/api/analyze-report", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reportContent: reportInput }),
+      });
 
       if (!response.ok) throw new Error(`API error: ${response.status}`);
       const data = await response.json();
-      alert(data.summary);
+      setSummaryText(data.summary || "No summary returned");
+
+      // NEW: set Gemini output
+      setGeminiOutput(data.summary || "No output returned from Gemini");
     } catch (err) {
       console.error("Text report analysis failed:", err);
+      setSummaryText("Error analyzing report.");
+      setGeminiOutput("Error analyzing report.");
     }
   };
 
@@ -110,25 +113,29 @@ const FeatureSection = () => {
       const formData = new FormData();
       formData.append("file", uploadedFile);
 
-      const response = await fetch(
-        "https://diagnex.onrender.com/api/analyze-report",
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
+      const response = await fetch("http://localhost:3001/api/analyze-report", {
+        method: "POST",
+        body: formData,
+      });
 
       if (!response.ok) throw new Error(`API error: ${response.status}`);
       const data = await response.json();
-      alert(data.summary);
+      setSummaryText(data.summary || "No summary returned");
+
+      // NEW: set Gemini output
+      setGeminiOutput(data.summary || "No output returned from Gemini");
     } catch (err) {
       console.error("File report analysis failed:", err);
+      setSummaryText("Error analyzing uploaded file.");
+      setGeminiOutput("Error analyzing uploaded file.");
     }
   };
 
   const removeUploadedFile = () => {
     setUploadedFile(null);
     setFilePreview(null);
+    setSummaryText(null);
+    setGeminiOutput(null);
   };
 
   return (
@@ -158,7 +165,6 @@ const FeatureSection = () => {
               style={{ backgroundColor: "#fd2a36" }}
             ></div>
           </div>
-
           <div
             className="rounded-2xl p-6 sm:p-8 lg:p-16 min-h-[300px] flex items-center justify-center transition-colors duration-300"
             style={{ backgroundColor: "var(--color-background)" }}
@@ -423,45 +429,119 @@ const FeatureSection = () => {
           </div>
         </motion.section>
 
-        {/* Summary Section */}
-        <motion.section
-          id="summary"
-          initial={{ y: 50, opacity: 0 }}
-          whileInView={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-        >
-          <div className="flex flex-col items-start mb-6">
-            <h2
-              className="text-2xl sm:text-3xl font-bold"
-              style={{ color: "var(--color-text)" }}
-            >
-              Summary
-            </h2>
-            <div
-              className="w-11 h-1 mt-2"
-              style={{ backgroundColor: "#fd2a36" }}
-            ></div>
-          </div>
-          <div
-            className="rounded-2xl p-6 sm:p-8 lg:p-16 min-h-[300px] flex items-center justify-center transition-colors duration-300"
-            style={{ backgroundColor: "var(--color-background)" }}
+        {/* NEW: Gemini Output Section */}
+        {geminiOutput && (
+          <motion.section
+            id="gemini-output"
+            initial={{ y: 20, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="mt-6"
           >
-            <div className="text-center">
-              <BarChart3
-                className="mx-auto mb-6"
-                size={48}
-                style={{ color: "var(--color-text)" }}
-              />
+            <div
+              className="rounded-2xl p-6 sm:p-8 lg:p-12 min-h-[150px] transition-colors duration-300"
+              style={{ backgroundColor: "var(--color-surface)" }}
+            >
               <h3
-                className="text-xl sm:text-2xl font-semibold"
+                className="text-xl sm:text-2xl font-semibold mb-4"
                 style={{ color: "var(--color-text)" }}
               >
-                Your health result summarized
+                Report Analysis Result
               </h3>
+              <div className="bg-gray-100 dark:bg-gray-700 p-4 rounded max-h-64 overflow-y-auto">
+                <pre className="whitespace-pre-wrap text-gray-800 dark:text-gray-200">
+                  {geminiOutput}
+                </pre>
+              </div>
             </div>
-          </div>
-        </motion.section>
+          </motion.section>
+        )}
+      </div>
+      <div>
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={async () => {
+            if (!prediction && !geminiOutput) {
+              alert("No outputs available to summarize.");
+              return;
+            }
+
+            const inputData = {
+              symptomOutput: prediction || "",
+              reportOutput: geminiOutput || "",
+            };
+
+            try {
+              const res = await fetch(
+                "http://localhost:3001/api/generate-summary",
+                {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify(inputData),
+                }
+              );
+              if (!res.ok) throw new Error(`API error: ${res.status}`);
+              const data = await res.json();
+              setSummaryGenerated(data.summary || "No summary returned");
+              setShowSummarySection(true);
+            } catch (err) {
+              console.error("Summary generation failed:", err);
+              setSummaryGenerated("Error generating summary.");
+              setShowSummarySection(true);
+            }
+          }}
+          className="px-6 py-3 rounded-lg text-base mt-6"
+          style={{
+            backgroundColor: "var(--color-primary)",
+            color: "var(--color-text-secondary)",
+          }}
+        >
+          Generate Summary
+        </motion.button>
+      </div>
+      <div>
+        {showSummarySection && (
+          <motion.section
+            id="summary"
+            initial={{ y: 50, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+          >
+            <div className="flex flex-col items-start mb-6">
+              <h2
+                className="text-2xl sm:text-3xl font-bold"
+                style={{ color: "var(--color-text)" }}
+              >
+                Summary
+              </h2>
+              <div
+                className="w-11 h-1 mt-2"
+                style={{ backgroundColor: "#fd2a36" }}
+              ></div>
+            </div>
+            <div
+              className="rounded-2xl p-6 sm:p-8 lg:p-16 min-h-[150px] flex items-center justify-center transition-colors duration-300"
+              style={{ backgroundColor: "var(--color-background)" }}
+            >
+              <div className="text-left max-w-2xl w-full">
+                <h3
+                  className="text-xl sm:text-2xl font-semibold mb-4"
+                  style={{ color: "var(--color-text)" }}
+                >
+                  Health Report Summary
+                </h3>
+                <div className="bg-gray-100 dark:bg-gray-700 p-4 rounded max-h-64 overflow-y-auto">
+                  <pre className="whitespace-pre-wrap text-gray-800 dark:text-gray-200">
+                    {summaryGenerated || "Generating summary..."}
+                  </pre>
+                </div>
+              </div>
+            </div>
+          </motion.section>
+        )}
       </div>
     </div>
   );

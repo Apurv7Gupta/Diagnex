@@ -53,7 +53,7 @@ const Footer = () => {
             </ul>
           </div>
 
-          <div className=" ">
+          <div>
             <h3
               className="text-base sm:text-md font-semibold mb-3 sm:mb-4 transition-colors duration-300"
               style={{ color: "var(--color-constant-secondary)" }}

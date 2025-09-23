@@ -3,3 +3,7 @@ gunicorn==21.2.0
 scikit-learn==1.4.1.post1
 pandas==2.0.3
 fuzzywuzzy==0.18.0
+
+# pip install Flask==2.3.2 gunicorn==21.2.0 scikit-learn==1.4.1.post1 pandas==2.0.3 fuzzywuzzy==0.18.0
+# pip uninstall -y Flask gunicorn scikit-learn pandas fuzzywuzzy
+#pip install transformers torch accelerate
