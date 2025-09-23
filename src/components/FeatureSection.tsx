@@ -10,7 +10,6 @@ const FeatureSection = () => {
   const [diet, setDiet] = useState<string[] | null>(null);
   const [description, setDescription] = useState<string | null>(null);
   const [workout, setWorkout] = useState<string[] | null>(null);
-
   const [reportInput, setReportInput] = useState("");
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [filePreview, setFilePreview] = useState<string | null>(null);
@@ -76,8 +75,6 @@ const FeatureSection = () => {
       if (!response.ok) throw new Error(`API error: ${response.status}`);
       const data = await response.json();
       setSummaryText(data.summary || "No summary returned");
-
-      // NEW: set Gemini output
       setGeminiOutput(data.summary || "No output returned from Gemini");
     } catch (err) {
       console.error("Text report analysis failed:", err);
@@ -121,8 +118,6 @@ const FeatureSection = () => {
       if (!response.ok) throw new Error(`API error: ${response.status}`);
       const data = await response.json();
       setSummaryText(data.summary || "No summary returned");
-
-      // NEW: set Gemini output
       setGeminiOutput(data.summary || "No output returned from Gemini");
     } catch (err) {
       console.error("File report analysis failed:", err);
@@ -305,14 +300,15 @@ const FeatureSection = () => {
                     <textarea
                       value={reportInput}
                       onChange={(e) => setReportInput(e.target.value)}
-                      placeholder="Paste your health report content here..."
-                      className="w-full p-4 border rounded-lg resize-none h-32 text-base"
+                      placeholder={`Paste your health report,\nUpload a medical file,\nOr just describe your health status`}
+                      className="w-full h-32 p-4 border rounded-lg resize-none text-base flex items-center justify-center text-center placeholder:text-center placeholder:whitespace-pre-line"
                       style={{
                         borderColor: "var(--color-border)",
                         backgroundColor: "var(--color-background)",
                         color: "var(--color-text-secondary)",
                       }}
                     />
+
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                       <motion.button
                         whileHover={{ scale: 1.05 }}
@@ -350,7 +346,7 @@ const FeatureSection = () => {
                     Uploaded File Preview
                   </h3>
 
-                  <div className="relative bg-white dark:bg-gray-700 rounded-lg border-2 border-gray-300 dark:border-gray-600 p-6 max-w-md mx-auto">
+                  <div className="relative bg-[var(--color-light)] rounded-lg border-2 border-gray-300 dark:border-gray-600 p-6 max-w-md mx-auto">
                     <button
                       onClick={removeUploadedFile}
                       className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600"
@@ -428,8 +424,6 @@ const FeatureSection = () => {
             </div>
           </div>
         </motion.section>
-
-        {/* NEW: Gemini Output Section */}
         {geminiOutput && (
           <motion.section
             id="gemini-output"
@@ -449,8 +443,11 @@ const FeatureSection = () => {
               >
                 Report Analysis Result
               </h3>
-              <div className="bg-gray-100 dark:bg-gray-700 p-4 rounded max-h-64 overflow-y-auto">
-                <pre className="whitespace-pre-wrap text-gray-800 dark:text-gray-200">
+              <div className="background-color: var(--color-surface) max-h-64 overflow-y-auto">
+                <pre
+                  className="whitespace-pre-wrap"
+                  style={{ color: "var(--color-text)" }}
+                >
                   {geminiOutput}
                 </pre>
               </div>
@@ -458,7 +455,7 @@ const FeatureSection = () => {
           </motion.section>
         )}
       </div>
-      <div>
+      <div className="flex items-center justify-center">
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
@@ -501,6 +498,7 @@ const FeatureSection = () => {
           Generate Summary
         </motion.button>
       </div>
+
       <div>
         {showSummarySection && (
           <motion.section
@@ -512,19 +510,19 @@ const FeatureSection = () => {
           >
             <div className="flex flex-col items-start mb-6">
               <h2
-                className="text-2xl sm:text-3xl font-bold"
+                className="text-2xl sm:text-3xl font-bold ml-4"
                 style={{ color: "var(--color-text)" }}
               >
                 Summary
               </h2>
               <div
-                className="w-11 h-1 mt-2"
+                className="w-11 h-1 mt-2 ml-4"
                 style={{ backgroundColor: "#fd2a36" }}
               ></div>
             </div>
             <div
               className="rounded-2xl p-6 sm:p-8 lg:p-16 min-h-[150px] flex items-center justify-center transition-colors duration-300"
-              style={{ backgroundColor: "var(--color-background)" }}
+              
             >
               <div className="text-left max-w-2xl w-full">
                 <h3
@@ -533,8 +531,11 @@ const FeatureSection = () => {
                 >
                   Health Report Summary
                 </h3>
-                <div className="bg-gray-100 dark:bg-gray-700 p-4 rounded max-h-64 overflow-y-auto">
-                  <pre className="whitespace-pre-wrap text-gray-800 dark:text-gray-200">
+                <div className="background-color: var(--color-surface); color: var(--color-text)">
+                  <pre
+                    className="whitespace-pre-wrap dark:text-gray-200 w-full"
+                    style={{ color: "var(--color-text)" }}
+                  >
                     {summaryGenerated || "Generating summary..."}
                   </pre>
                 </div>

@@ -8,6 +8,10 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 const GEMINI_KEY = process.env.GEMINI_KEY;
 
+// Storing last Gemini outputs for summary without pinging API again
+let lastGeminiReportOutput = null;
+let lastGeminiSummaryOutput = null;
+
 // Using multer with RAM storage
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -55,51 +59,30 @@ app.post("/api/chat", (req, res) => {
   });
 });
 
-// Generating summary route (T5 Small)
-app.post("/api/generate-summary", async (req, res) => {
-  const { symptomOutput, reportOutput } = req.body;
+// Generating summary route (combines symptom + last Gemini report)
+app.post("/api/generate-summary", (req, res) => {
+  const { symptomOutput } = req.body;
 
-  if (!symptomOutput && !reportOutput) {
+  if (!lastGeminiSummaryOutput) {
     return res.status(400).json({
-      summary: "No symptom or report data available to generate summary.",
+      summary: "No report analyzed yet. Run the report analyzer first.",
     });
   }
 
-  const inputText = `
-Using outputs:
-${symptomOutput ? `Symptoms: ${symptomOutput}` : ""}
-${reportOutput ? `Report: ${reportOutput}` : ""}
+  if (!symptomOutput) {
+    const summaryText = `Report Summary:\n${lastGeminiSummaryOutput}\n\nNote: Symptom analysis not available.`;
+    return res.json({ summary: summaryText });
+  }
 
-Generate a concise, human-readable, easily understandable summary for a patient.
+  const combinedText = `
+Symptoms Analysis:
+${symptomOutput}
+
+Report Summary:
+${lastGeminiSummaryOutput}
 `;
 
-  try {
-    const response = await fetch(
-      "https://api-inference.huggingface.co/models/google/flan-t5-small",
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${process.env.HUGGINGFACE_KEY}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ inputs: inputText }),
-      }
-    );
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error("Hugging Face API error:", errorText);
-      return res.status(500).json({ error: "HF API error", detail: errorText });
-    }
-
-    const data = await response.json();
-    const summary = data?.[0]?.generated_text || "No summary returned";
-
-    res.json({ summary });
-  } catch (err) {
-    console.error("Error generating summary:", err);
-    res.status(500).json({ summary: "Error generating summary" });
-  }
+  res.json({ summary: combinedText });
 });
 
 // Symptom checker (Flask service on port 5000)
@@ -131,12 +114,10 @@ app.post("/api/symptoms", async (req, res) => {
 app.post("/api/analyze-report", upload.single("file"), async (req, res) => {
   const { reportContent } = req.body;
   const uploadedFile = req.file;
-  let text = "";
 
   let requestParts = [];
 
   if (uploadedFile) {
-    // send raw file as base64 inlineData
     requestParts.push({
       inlineData: {
         mimeType: uploadedFile.mimetype,
@@ -166,7 +147,7 @@ app.post("/api/analyze-report", upload.single("file"), async (req, res) => {
               role: "user",
               parts: [
                 {
-                  text: "You are a medical assistant. Read this health report and explain in simple human language.",
+                  text: "You are a medical assistant. Read this health report and explain in simple human language. Also generate a concise summary suitable for a patient.",
                 },
                 ...requestParts,
               ],
@@ -189,12 +170,18 @@ app.post("/api/analyze-report", upload.single("file"), async (req, res) => {
     }
 
     const data = await geminiResponse.json();
-    const summary =
-      data.candidates?.[0]?.content?.parts?.[0]?.text ||
+
+    // Combine all parts text
+    const fullGeminiText =
+      data.candidates?.[0]?.content?.parts?.map((p) => p.text).join("\n") ||
       "Gemini returned no summary.";
 
+    // Store for later summary
+    lastGeminiReportOutput = fullGeminiText;
+    lastGeminiSummaryOutput = fullGeminiText;
+
     res.json({
-      summary,
+      summary: fullGeminiText,
       recommendations: [
         "Report processed by Gemini LLM",
         "Human-readable summary generated",
