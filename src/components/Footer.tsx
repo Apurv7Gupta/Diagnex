@@ -63,7 +63,7 @@ const Footer = () => {
             <div className="flex space-x-3 sm:space-x-4">
               <motion.a
                 whileHover={{ scale: 1.2 }}
-                href="#"
+                href="https://www.linkedin.com/in/apurv7gupta/"
                 className="text-gray-400 dark:text-gray-500 hover:text-black transition-colors duration-300"
                 style={{ color: "var(--color-constant-secondary)" }}
               >
@@ -71,27 +71,11 @@ const Footer = () => {
               </motion.a>
               <motion.a
                 whileHover={{ scale: 1.2 }}
-                href="#"
-                className="text-gray-400 dark:text-gray-500 hover:text-white dark:hover:text-gray-300 transition-colors duration-300"
-                style={{ color: "var(--color-constant-secondary)" }}
-              >
-                <Twitter size={20} className="sm:w-6 sm:h-6" />
-              </motion.a>
-              <motion.a
-                whileHover={{ scale: 1.2 }}
-                href="#"
+                href="https://github.com/Apurv7Gupta/Diagnex"
                 className="text-gray-400 dark:text-gray-500 hover:text-white dark:hover:text-gray-300 transition-colors duration-300"
                 style={{ color: "var(--color-constant-secondary)" }}
               >
                 <Github size={20} className="sm:w-6 sm:h-6" />
-              </motion.a>
-              <motion.a
-                whileHover={{ scale: 1.2 }}
-                href="#"
-                className="text-gray-400 dark:text-gray-500 hover:text-white dark:hover:text-gray-300 transition-colors duration-300"
-                style={{ color: "var(--color-constant-secondary)" }}
-              >
-                <Instagram size={20} className="sm:w-6 sm:h-6" />
               </motion.a>
             </div>
           </div>
