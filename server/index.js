@@ -80,7 +80,7 @@ ${lastGeminiSummaryOutput}
 app.post("/api/symptoms", async (req, res) => {
   const { symptoms } = req.body;
   try {
-    const response = await fetch("https://diagnex.onrender.com/predict", {
+    const response = await fetch("https://diagnex-ac13.onrender.com/predict", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ symptoms }),
