@@ -2,7 +2,7 @@ Flask==2.3.2
 gunicorn==21.2.0
 scikit-learn==1.4.1.post1
 # pandas==2.0.3
-pip install --pre pandas
+pandas --pre
 fuzzywuzzy==0.18.0
 
 # pip install Flask==2.3.2 gunicorn==21.2.0 scikit-learn==1.4.1.post1 pandas==2.0.3 fuzzywuzzy==0.18.0
