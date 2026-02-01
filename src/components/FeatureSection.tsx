@@ -22,7 +22,7 @@ const FeatureSection = () => {
     if (!symptomInput.trim()) return;
 
     try {
-      const response = await fetch("http://localhost:3001/api/symptoms", {
+      const response = await fetch("https://diagnex.onrender.com/api/symptoms", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -66,7 +66,7 @@ const FeatureSection = () => {
     if (!reportInput.trim()) return;
 
     try {
-      const response = await fetch("http://localhost:3001/api/analyze-report", {
+      const response = await fetch("https://diagnex.onrender.com/api/analyze-report", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ reportContent: reportInput }),
@@ -110,7 +110,7 @@ const FeatureSection = () => {
       const formData = new FormData();
       formData.append("file", uploadedFile);
 
-      const response = await fetch("http://localhost:3001/api/analyze-report", {
+      const response = await fetch("https://diagnex.onrender.com/api/analyze-report", {
         method: "POST",
         body: formData,
       });
@@ -472,7 +472,7 @@ const FeatureSection = () => {
 
             try {
               const res = await fetch(
-                "http://localhost:3001/api/generate-summary",
+                "https://diagnex.onrender.com/api/generate-summary",
                 {
                   method: "POST",
                   headers: { "Content-Type": "application/json" },
