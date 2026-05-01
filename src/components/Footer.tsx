@@ -75,8 +75,22 @@ const Footer = () => {
                 className="text-gray-400 dark:text-gray-500 hover:text-white dark:hover:text-gray-300 transition-colors duration-300"
                 style={{ color: "var(--color-constant-secondary)" }}
               >
-                <Github size={20} className="sm:w-6 sm:h-6" />
-              </motion.a>
+                <motion.a
+                  whileHover={{ scale: 1.2 }}
+                  href="https://www.linkedin.com/in/khushrajrai/"
+                  className="text-gray-400 dark:text-gray-500 hover:text-black transition-colors duration-300"
+                  style={{ color: "var(--color-constant-secondary)" }}
+                >
+                  <Linkedin size={20} className="sm:w-6 sm:h-6" />
+                </motion.a>
+                <motion.a
+                  whileHover={{ scale: 1.2 }}
+                  href="https://github.com/khushrajrai/diagnex-app"
+                  className="text-gray-400 dark:text-gray-500 hover:text-white dark:hover:text-gray-300 transition-colors duration-300"
+                  style={{ color: "var(--color-constant-secondary)" }}
+                >
+                  <Github size={20} className="sm:w-6 sm:h-6" />
+                </motion.a>
             </div>
           </div>
         </div>
